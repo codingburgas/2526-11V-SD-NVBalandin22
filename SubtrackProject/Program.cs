@@ -39,4 +39,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedAsync(scope.ServiceProvider);
+}
+
 app.Run();
