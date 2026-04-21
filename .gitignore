@@ -1,0 +1,25 @@
+# Build output
+**/bin/
+**/obj/
+
+# Rider IDE files
+.idea/
+
+# Database file
+*.db
+*.db-shm
+*.db-wal
+
+# Local settings
+**/appsettings.Development.json
+*.user
+
+# dotnet tools manifest
+dotnet-tools.json
+
+# Vendor libraries (restored via npm/libman)
+**/wwwroot/lib/
+
+# OS
+.DS_Store
+Thumbs.db
