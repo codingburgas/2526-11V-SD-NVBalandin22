@@ -1,24 +1,29 @@
-using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SubtrackProject.Models;
+using SubtrackProject.Services.Interfaces;
 
 namespace SubtrackProject.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly ISubscriptionService _subscriptionService;
+
+    public HomeController(ISubscriptionService subscriptionService)
     {
-        return View();
+        _subscriptionService = subscriptionService;
     }
 
-    public IActionResult Privacy()
+    // GET: /  or  /Home/Index
+    // If not logged in → welcome page. If logged in → dashboard with stats.
+    public async Task<IActionResult> Index()
     {
-        return View();
-    }
+        if (!User.Identity!.IsAuthenticated)
+            return View("Welcome");
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var stats = await _subscriptionService.GetDashboardStatsAsync(userId);
+
+        return View("Dashboard", stats);
     }
 }
