@@ -90,6 +90,18 @@ public class SubscriptionController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // GET: /Subscription/Details/5
+    public async Task<IActionResult> Details(int id)
+    {
+        var list = await _subscriptionService.GetAllForUserAsync(CurrentUserId);
+        var sub = list.FirstOrDefault(s => s.Id == id);
+        if (sub == null) return NotFound();
+
+        return View(sub);
+    }
+    
+    
+    
     // Fills the categories dropdown for Create/Edit forms
     private async Task PopulateCategoriesAsync()
     {

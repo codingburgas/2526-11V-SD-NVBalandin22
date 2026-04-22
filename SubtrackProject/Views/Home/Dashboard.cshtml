@@ -1,0 +1,83 @@
+@model SubtrackProject.DTOs.Dashboard.DashboardStatsDto
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h6>Monthly Total</h6>
+                <h2>@Model.TotalMonthlyCost.ToString("F2") €</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h6>Yearly Total</h6>
+                <h2>@Model.TotalYearlyCost.ToString("F2") €</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-secondary">
+            <div class="card-body">
+                <h6>Active Subscriptions</h6>
+                <h2>@Model.ActiveSubscriptionsCount</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Top 3 Most Expensive</div>
+            <ul class="list-group list-group-flush">
+                @if (!Model.TopThreeMostExpensive.Any())
+                {
+                    <li class="list-group-item text-muted">No active subscriptions yet.</li>
+                }
+                else
+                {
+                    @foreach (var item in Model.TopThreeMostExpensive)
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>@item.Name <small class="text-muted">(@item.CategoryName)</small></span>
+                            <strong>@item.MonthlyCost.ToString("F2") € / mo</strong>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Spending by Category</div>
+            <ul class="list-group list-group-flush">
+                @if (!Model.SpendingByCategory.Any())
+                {
+                    <li class="list-group-item text-muted">No data yet.</li>
+                }
+                else
+                {
+                    @foreach (var cat in Model.SpendingByCategory)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <span class="badge" style="background-color:@cat.CategoryColor">&nbsp;</span>
+                                @cat.CategoryName
+                                <small class="text-muted">(@cat.SubscriptionCount)</small>
+                            </span>
+                            <strong>@cat.MonthlyCost.ToString("F2") € / mo</strong>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
