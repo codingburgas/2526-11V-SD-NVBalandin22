@@ -44,8 +44,14 @@ public class CategoryService : ICategoryService
         };
     }
 
-    public async Task CreateAsync(CategoryCreateDto dto)
+    public async Task<string?> CreateAsync(CategoryCreateDto dto)
     {
+        var exists = await _context.Categories
+            .AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower());
+
+        if (exists)
+            return "A category with this name already exists.";
+
         var category = new Category
         {
             Name = dto.Name,
@@ -55,19 +61,27 @@ public class CategoryService : ICategoryService
 
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
+        return null;
     }
 
-    public async Task<bool> UpdateAsync(CategoryEditDto dto)
+    public async Task<string?> UpdateAsync(CategoryEditDto dto)
     {
         var category = await _context.Categories.FindAsync(dto.Id);
-        if (category == null) return false;
+        if (category == null)
+            return "Category not found.";
+
+        var nameTaken = await _context.Categories
+            .AnyAsync(c => c.Id != dto.Id && c.Name.ToLower() == dto.Name.ToLower());
+
+        if (nameTaken)
+            return "A category with this name already exists.";
 
         category.Name = dto.Name;
         category.Description = dto.Description;
         category.Color = dto.Color;
 
         await _context.SaveChangesAsync();
-        return true;
+        return null;
     }
 
     public async Task<bool> DeleteAsync(int id)

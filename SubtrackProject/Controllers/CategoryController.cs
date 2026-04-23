@@ -38,7 +38,13 @@ public class CategoryController : Controller
     {
         if (!ModelState.IsValid) return View(dto);
 
-        await _categoryService.CreateAsync(dto);
+        var error = await _categoryService.CreateAsync(dto);
+        if (error != null)
+        {
+            ModelState.AddModelError(nameof(dto.Name), error);
+            return View(dto);
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -59,8 +65,12 @@ public class CategoryController : Controller
     {
         if (!ModelState.IsValid) return View(dto);
 
-        var updated = await _categoryService.UpdateAsync(dto);
-        if (!updated) return NotFound();
+        var error = await _categoryService.UpdateAsync(dto);
+        if (error != null)
+        {
+            ModelState.AddModelError(nameof(dto.Name), error);
+            return View(dto);
+        }
 
         return RedirectToAction(nameof(Index));
     }
