@@ -24,7 +24,7 @@
 
             <div class="mb-3">
                 <label asp-for="BillingCycle" class="form-label"></label>
-                <select asp-for="BillingCycle" asp-items="Html.GetEnumSelectList<SubtrackProject.Models.BillingCycle>()" class="form-select"></select>
+                <select asp-for="BillingCycle" asp-items="Html.GetEnumSelectList<BillingCycle>()" class="form-select"></select>
             </div>
 
             <div class="mb-3">
@@ -59,4 +59,33 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (function () {
+            const startDateInput = document.getElementById('StartDate');
+            const cycleSelect = document.getElementById('BillingCycle');
+            const nextPaymentInput = document.getElementById('NextPaymentDate');
+
+            function recalculate() {
+                if (!startDateInput.value) return;
+
+                const start = new Date(startDateInput.value);
+                const cycle = cycleSelect.value;
+
+                const next = new Date(start);
+                if (cycle === 'Monthly' || cycle === '0') {
+                    next.setMonth(next.getMonth() + 1);
+                } else {
+                    next.setFullYear(next.getFullYear() + 1);
+                }
+
+                const yyyy = next.getFullYear();
+                const mm = String(next.getMonth() + 1).padStart(2, '0');
+                const dd = String(next.getDate()).padStart(2, '0');
+                nextPaymentInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            startDateInput.addEventListener('change', recalculate);
+            cycleSelect.addEventListener('change', recalculate);
+        })();
+    </script>
 }

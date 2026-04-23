@@ -61,13 +61,23 @@ public class SubscriptionService : ISubscriptionService
 
     public async Task CreateAsync(SubscriptionCreateDto dto, string userId)
     {
+        // If user left the next payment date blank or in the past,
+        // calculate it based on billing cycle
+        var nextPayment = dto.NextPaymentDate;
+        if (nextPayment <= dto.StartDate)
+        {
+            nextPayment = dto.BillingCycle == BillingCycle.Monthly
+                ? dto.StartDate.AddMonths(1)
+                : dto.StartDate.AddYears(1);
+        }
+
         var subscription = new Subscription
         {
             Name = dto.Name,
             Price = dto.Price,
             BillingCycle = dto.BillingCycle,
             StartDate = dto.StartDate,
-            NextPaymentDate = dto.NextPaymentDate,
+            NextPaymentDate = nextPayment,
             IsActive = dto.IsActive,
             CategoryId = dto.CategoryId,
             UserId = userId
