@@ -34,6 +34,7 @@ public class CategoryController : Controller
     // POST: /Category/Create
     // Handle the submitted form
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CategoryCreateDto dto)
     {
         if (!ModelState.IsValid) return View(dto);
@@ -61,6 +62,7 @@ public class CategoryController : Controller
 
     // POST: /Category/Edit/5
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(CategoryEditDto dto)
     {
         if (!ModelState.IsValid) return View(dto);
@@ -77,6 +79,7 @@ public class CategoryController : Controller
 
     // POST: /Category/Delete/5
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _categoryService.DeleteAsync(id);

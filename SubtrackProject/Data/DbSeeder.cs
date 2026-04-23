@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using SubtrackProject.Models;
-
+using Microsoft.EntityFrameworkCore;
 namespace SubtrackProject.Data;
 
 public static class DbSeeder
@@ -39,7 +39,7 @@ public static class DbSeeder
         }
 
         // 3. Default categories (only if table is empty)
-        if (!context.Categories.Any())
+        if (!await context.Categories.AnyAsync())
         {
             context.Categories.AddRange(
                 new Category { Name = "Entertainment", Description = "Streaming, games, media", Color = "#e74c3c" },

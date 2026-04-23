@@ -43,6 +43,7 @@ public class SubscriptionController : Controller
 
     // POST: /Subscription/Create
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(SubscriptionCreateDto dto)
     {
         if (!ModelState.IsValid)
@@ -68,6 +69,7 @@ public class SubscriptionController : Controller
 
     // POST: /Subscription/Edit/5
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(SubscriptionEditDto dto)
     {
         if (!ModelState.IsValid)
@@ -84,9 +86,12 @@ public class SubscriptionController : Controller
 
     // POST: /Subscription/Delete/5
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _subscriptionService.DeleteAsync(id, CurrentUserId);
+        var deleted = await _subscriptionService.DeleteAsync(id, CurrentUserId);
+        if (!deleted) return NotFound();
+
         return RedirectToAction(nameof(Index));
     }
 

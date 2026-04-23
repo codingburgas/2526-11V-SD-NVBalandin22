@@ -22,6 +22,7 @@ public class AccountController : Controller
     public IActionResult Login() => View();
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginDto dto)
     {
         if (!ModelState.IsValid) return View(dto);
@@ -42,6 +43,7 @@ public class AccountController : Controller
     public IActionResult Register() => View();
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
         if (!ModelState.IsValid) return View(dto);
@@ -70,6 +72,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
